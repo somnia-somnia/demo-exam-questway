@@ -1,0 +1,42 @@
+{% extends 'portal/base.html' %}
+{% block title %}Панель администратора · {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-heading admin-heading"><div><p class="eyebrow">РАБОЧЕЕ МЕСТО АДМИНИСТРАТОРА</p><h1>Панель администратора</h1><p class="muted">{{ site.many }} · найдено {{ page.paginator.count }}</p></div>
+{% if site.key == 'quest' %}<a class="button secondary" href="{% url 'catalog' %}">Каталог и расписание →</a>{% endif %}</div>
+<section class="panel admin-panel" aria-label="Список заявок">
+<form class="filters" method="get" action="{% url 'admin_panel' %}">
+  <div class="field"><label for="search">Поиск</label><input type="search" id="search" name="q" value="{{ search }}" placeholder="Номер, ФИО, логин или наименование"></div>
+  <div class="field"><label for="filter">Статус</label><select id="filter" name="status"><option value="">Все статусы</option>{% for key,label in site.statuses %}<option value="{{ key }}"{% if selected == key %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+  <button class="button compact" type="submit">Применить</button><a class="button ghost compact" href="{% url 'admin_panel' %}">Сбросить</a>
+</form>
+<table class="admin-table">
+<thead><tr><th scope="col">№</th><th scope="col">Пользователь</th><th scope="col">Заявка</th><th scope="col">Статус</th><th scope="col">Действие</th></tr></thead>
+<tbody>{% for item in page %}
+<tr>
+<td data-label="№"><strong>#{{ item.pk|stringformat:'04d' }}</strong><small>{{ item.created_at|date:"d.m.Y" }}</small></td>
+<td data-label="Пользователь"><strong>{{ item.owner.full_name }}</strong><small>{{ item.owner.phone }}<br>{{ item.owner.email }}</small></td>
+<td data-label="Заявка"><strong>{{ item.title }}</strong><dl class="table-details">{% for key,value in item.details %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>{% if item.note %}<small>{{ item.note }}</small>{% endif %}{% if item.review %}<small><strong>Отзыв:</strong> {{ item.review.body }}</small>{% endif %}</td>
+<td data-label="Статус"><span class="badge status-{{ item.status }}">{{ item.get_status_display }}</span></td>
+<td data-label="Действие"><a class="button secondary compact" href="{% url 'status' item.pk %}?{{ request.GET.urlencode }}">Изменить</a></td>
+</tr>
+{% empty %}<tr><td colspan="5" class="empty">По этим фильтрам заявки не найдены.</td></tr>{% endfor %}</tbody>
+</table>
+<nav class="pager" aria-label="Страницы заявок">
+  {% if page.has_previous %}<a class="button secondary compact" href="?{{ filter_query }}&amp;page={{ page.previous_page_number }}" aria-label="Предыдущая страница">←</a>{% endif %}
+  <span>Страница {{ page.number }} из {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="button secondary compact" href="?{{ filter_query }}&amp;page={{ page.next_page_number }}" aria-label="Следующая страница">→</a>{% endif %}
+</nav></section>
+{% if status_row %}
+<section class="panel inline-dialog" data-dialog-fallback>
+<dialog class="dialog" open data-open-dialog>
+  <div class="dialog-head"><div><p class="eyebrow">ЗАЯВКА №{{ status_row.pk }}</p><h2>Изменить статус</h2></div><a class="icon-button" href="{% url 'admin_panel' %}?{{ request.GET.urlencode }}" aria-label="Закрыть">×</a></div>
+  <p class="muted">{{ status_row.title }}</p>
+  <form method="post" class="stack" data-validate data-status-form>
+    {% csrf_token %}
+    {% for field in status_form %}{% if field.name != 'reason' or site.cancelled %}
+      <div class="field{% if field.errors %} has-error{% endif %}" data-field="{{ field.name }}">{{ field.label_tag }}{{ field }}<div class="field-error" id="{{ field.auto_id }}_error" aria-live="polite">{{ field.errors|striptags }}</div></div>
+    {% endif %}{% endfor %}
+    <button class="button wide" type="submit">Сохранить статус</button>
+  </form>
+</dialog></section>{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'portal/base.html' %}
+{% block title %}Каталог и расписание · {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-heading"><a class="back" href="{% url 'admin_panel' %}">← Панель администратора</a><h1>Каталог и расписание</h1><p class="muted">Управляйте сценариями, режимами прохождения и интервалами для записи.</p></div>
+<div class="form-layout">
+<section class="panel form-panel">
+  <nav class="tabs" aria-label="Разделы каталога"><a href="?kind=quest" {% if kind == 'quest' %}aria-current="page"{% endif %}>Квест</a><a href="?kind=variation" {% if kind == 'variation' %}aria-current="page"{% endif %}>Вариация</a><a href="?kind=slot" {% if kind == 'slot' %}aria-current="page"{% endif %}>Расписание</a></nav>
+  <h2>{% if instance %}Редактирование{% else %}Добавление{% endif %}</h2>
+  <form method="post" class="stack" data-validate>
+    {% csrf_token %}<input type="hidden" name="kind" value="{{ kind }}">{% if instance %}<input type="hidden" name="id" value="{{ instance.pk }}">{% endif %}
+    {% include 'portal/fields.html' %}<button class="button wide">Сохранить</button>
+  </form>
+  {% if instance %}<form class="archive" method="post">
+    {% csrf_token %}<input type="hidden" name="kind" value="{{ kind }}"><input type="hidden" name="id" value="{{ instance.pk }}">
+    <button class="button secondary" name="action" value="{% if instance.active %}archive{% else %}restore{% endif %}">{% if instance.active %}Удалить из каталога{% else %}Восстановить{% endif %}</button>
+  </form>{% endif %}
+</section>
+<section class="panel help-panel">
+  {% if kind == 'slot' %}<h2>Ближайшие интервалы</h2><ul>{% for slot in slots %}<li>{{ slot.day|date:'d.m.Y' }} · {{ slot.time|time:'H:i' }} · {{ slot.quest }}</li>{% empty %}<li>Интервалов пока нет.</li>{% endfor %}</ul>
+  {% else %}<h2>Квесты и вариации</h2>{% for quest in quests %}<div class="catalog-item"><a href="?kind=quest&amp;id={{ quest.pk }}">{{ quest.name }}</a>{% if not quest.active %} <span class="badge status-cancelled">Архив</span>{% endif %}<ul>{% for mode in quest.variations.all %}<li><a href="?kind=variation&amp;id={{ mode.pk }}">{{ mode.name }}</a>{% if not mode.active %} · Архив{% endif %}</li>{% endfor %}</ul></div>{% endfor %}{% endif %}
+</section>
+</div>
+{% endblock %}

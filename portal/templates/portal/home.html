@@ -1,0 +1,28 @@
+{% extends 'portal/base.html' %}{% load static %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="signal"></span>{{ site.kicker }}</p><h1>{{ site.head }}</h1><p class="lead">{{ site.lead }}</p>
+    {% if request.member.is_admin %}<a class="button" href="{% url 'admin_panel' %}">Панель администратора <span aria-hidden="true">→</span></a>
+    {% elif request.member %}<a class="button" href="{% url 'create' %}">{{ site.action }} <span aria-hidden="true">→</span></a>
+    {% else %}<a class="button" href="{% url 'login' %}">{{ site.action }} <span aria-hidden="true">→</span></a><a class="hero-link" href="{% url 'register' %}">Создать аккаунт</a>{% endif %}
+  </div>
+  
+</section>
+<section class="home-block">
+  <p class="eyebrow">ВЫБЕРИТЕ, С ЧЕГО НАЧАТЬ</p>
+  <h2>{% if site.key == 'quest' %}Каталог квестов{% elif site.key == 'help' %}С чем поможем{% else %}Автомобили в прокате{% endif %}</h2>
+  <div class="tiles">
+  {% if site.key == 'quest' %}
+    {% for item in quests %}<article class="panel tile"><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ item.name }}</h3><p>{{ item.summary }}</p>
+    {% if request.member and not request.member.is_admin %}<a href="{% url 'create' %}?quest={{ item.pk }}">Выбрать квест →</a>{% else %}<a href="{% url 'login' %}">Войти для бронирования →</a>{% endif %}</article>{% empty %}<p>Каталог пока пуст.</p>{% endfor %}
+  {% else %}
+    {% for code, heading, text in site.cards %}<article class="panel tile"><span>{{ code }}</span><h3>{{ heading }}</h3><p>{{ text }}</p></article>{% endfor %}
+  {% endif %}
+  </div>
+</section>
+<section class="guide panel">
+  <div><p class="eyebrow">ПОРЯДОК ДЕЙСТВИЙ</p><h2>От заявки до результата</h2></div>
+  <ol><li>Войдите или создайте аккаунт</li><li>Заполните форму и отправьте заявку</li><li>Следите за статусом в личном кабинете</li></ol>
+</section>
+{% endblock %}

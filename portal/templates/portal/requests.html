@@ -1,0 +1,34 @@
+{% extends 'portal/base.html' %}
+{% block title %}{{ site.list }} · {{ site.name }}{% endblock %}
+{% block content %}
+<section class="account-heading">
+<div><p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p><h1>{{ site.list }}</h1><p class="muted">{{ request.member.full_name }} · {{ request.member.login }}</p></div>
+<a class="button" href="{% url 'create' %}">＋ {{ site.action }}</a>
+</section>
+<div class="account-layout">
+<section class="request-list" aria-label="{{ site.list }}">
+  {% for item in items %}
+  <article class="panel request-card" id="row-{{ item.pk }}">
+    <div class="request-top"><span class="eyebrow">№{{ item.pk|stringformat:"04d" }} · {{ item.created_at|date:"d.m.Y" }}</span><span class="badge status-{{ item.status }}">{{ item.get_status_display }}</span></div>
+    <h2>{{ item.title }}</h2>
+    <dl class="detail-grid">{% for key, value in item.details %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>
+    {% if item.note %}<p class="record-note">{{ item.note }}</p>{% endif %}
+    {% if item.review_allowed %}<a class="button secondary compact" href="{% url 'review' item.pk %}">Оставить отзыв</a>
+    {% elif item.review %}<blockquote class="review"><strong>Ваш отзыв</strong><p>{{ item.review.body }}</p></blockquote>{% endif %}
+  </article>
+  {% empty %}<div class="panel empty"><h2>Заявок пока нет</h2><p>После отправки заявки здесь появятся её данные и статус.</p></div>{% endfor %}
+</section>
+<aside class="account-side">
+  <div class="panel help-panel"><p class="eyebrow">ОБРАТНАЯ СВЯЗЬ</p><h2>Расскажите, как всё прошло</h2><p class="muted">Кнопка отзыва появится рядом с завершённой заявкой.</p></div>
+</aside>
+</div>
+{% if review_row %}
+<section class="panel inline-dialog" data-dialog-fallback>
+<dialog class="dialog" open data-open-dialog>
+<div class="dialog-head"><div><p class="eyebrow">ЗАЯВКА №{{ review_row.pk }}</p><h2>Оставить отзыв</h2></div><a class="icon-button" href="{% url 'requests' %}" aria-label="Закрыть">×</a></div>
+<form method="post" class="stack" data-validate action="{% url 'review' review_row.pk %}">
+  {% csrf_token %}{% include 'portal/fields.html' with form=review_form %}
+  <button class="button wide" type="submit">Опубликовать отзыв</button>
+</form>
+</dialog></section>{% endif %}
+{% endblock %}

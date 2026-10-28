@@ -1,0 +1,48 @@
+{% load static %}<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#151922">
+<title>{% block title %}{{ site.name }}{% endblock %}</title>
+<link rel="icon" href="{% static 'media/mark.svg' %}" type="image/svg+xml">
+</head>
+<body class="theme-{{ site.key }}">
+<a class="skip" href="#main">К содержимому</a>
+<header class="header">
+  <div class="wrap header-row">
+    <a class="brand" href="{% url 'home' %}" aria-label="{{ site.name }} — главная">
+      {% if site.key == 'rent' %}<img class="wordmark" src="{% static 'media/logo.webp' %}" alt="{{ site.name }}">{% else %}
+      <img src="{% static 'media/mark.svg' %}" alt="" width="36" height="36"><span>{{ site.name }}<small>{{ site.audience }}</small></span>{% endif %}
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Открыть меню">☰</button>
+    <nav class="navigation" id="navigation" aria-label="Основное меню">
+      <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>Главная</a>
+      {% if request.member %}
+        {% if request.member.is_admin %}
+          <a href="{% url 'admin_panel' %}" {% if request.resolver_match.url_name == 'admin_panel' %}aria-current="page"{% endif %}>Панель администратора</a>
+          {% if site.key == 'quest' %}<a href="{% url 'catalog' %}" {% if request.resolver_match.url_name == 'catalog' %}aria-current="page"{% endif %}>Каталог и расписание</a>{% endif %}
+        {% else %}
+          <a href="{% url 'requests' %}" {% if request.resolver_match.url_name == 'requests' %}aria-current="page"{% endif %}>{{ site.list }}</a>
+          <a class="button compact" href="{% url 'create' %}">{{ site.action }}</a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button ghost compact" type="submit">Выйти</button></form>
+      {% else %}
+        <a href="{% url 'login' %}" {% if request.resolver_match.url_name == 'login' %}aria-current="page"{% endif %}>Войти</a>
+        <a class="button compact" href="{% url 'register' %}">Регистрация</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+<main id="main" class="main wrap">{% block content %}{% endblock %}</main>
+<footer class="footer">
+  <div class="wrap footer-row"><div><strong>{{ site.name }}</strong><small>{{ site.audience }} · Учебный проект</small></div>
+  <a href="{% url 'prototype' %}">Прототип</a>
+  <div class="socials">
+    <a href="https://vk.com/" aria-label="ВКонтакте"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h4c.2 5 2.2 7 3.5 7.2V6H14v4c1.4-.2 3-2.2 3.5-4H21c-.6 2.7-2.5 4.7-3.8 5.6 1.3.6 3.6 2.6 4.4 5.4h-4c-.6-1.8-2.1-3.5-3.6-3.7V17h-.5C7.3 17 3.5 12.9 3 6Z"/></svg></a>
+    <a href="https://telegram.org/" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m3 11 17-7c.7-.3 1.2.2 1 1l-3 14c-.2.8-.7 1-1.4.5L12 16l-2 2c-.2.2-.5.3-.7.3l.4-4.6 8-7-10 6.2L3 12c-.7-.2-.7-.7 0-1Z"/></svg></a>
+  </div></div>
+</footer>
+{% if messages %}<div class="toasts" aria-live="polite">{% for message in messages %}
+<div class="toast" role="status"><span class="toast-icon" aria-hidden="true">✓</span><div><strong>Готово</strong><p>{{ message }}</p></div><button aria-label="Закрыть уведомление" data-dismiss type="button">×</button></div>
+{% endfor %}</div>{% endif %}
+</body></html>

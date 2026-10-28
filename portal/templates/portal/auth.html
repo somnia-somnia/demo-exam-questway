@@ -1,0 +1,23 @@
+{% extends 'portal/base.html' %}{% load static %}
+{% block title %}{% if action == 'register' %}Регистрация{% else %}Авторизация{% endif %} · {{ site.name }}{% endblock %}
+{% block content %}
+<div class="auth-layout">
+  <aside class="auth-cover">
+    <img src="{% static 'media/slide-1.webp' %}" alt="" width="1200" height="680">
+    <div><p class="eyebrow">{{ site.kicker }}</p><h2>{{ site.head }}</h2><p>{{ site.lead }}</p></div>
+  </aside>
+  <section class="panel auth-card">
+    <p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p>
+    {% if action == 'register' %}
+      <h1>Регистрация</h1><p class="muted">Заполните данные, чтобы создать аккаунт.</p>
+    {% else %}
+      <h1>Авторизация</h1><p class="muted">Войдите, чтобы открыть личный кабинет.</p>
+    {% endif %}
+    <form class="stack" method="post" data-validate>
+      {% csrf_token %}{% include 'portal/fields.html' %}
+      <button class="button wide" type="submit">{% if action == 'register' %}Зарегистрироваться{% else %}Войти{% endif %}<span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-switch">{% if action == 'register' %}<a href="{% url 'login' %}">Уже зарегистрированы? Войти</a>{% else %}<a href="{% url 'register' %}">Еще не зарегистрированы? Регистрация</a>{% endif %}</p>
+  </section>
+</div>
+{% endblock %}

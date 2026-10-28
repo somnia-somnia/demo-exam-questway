@@ -1,0 +1,22 @@
+{% extends 'portal/base.html' %}
+{% block title %}{{ site.action }} · {{ site.name }}{% endblock %}
+{% block content %}
+<div class="page-heading"><a class="back" href="{% url 'requests' %}">← {{ site.list }}</a><h1>{{ site.action }}</h1><p class="muted">Заполните все поля. Заявка появится в вашем кабинете.</p></div>
+<div class="form-layout">
+<section class="panel form-panel" aria-label="Форма заявки">
+  <p class="eyebrow">ДАННЫЕ ЗАЯВКИ</p>
+  <form method="post" class="stack" data-validate {% if site.key == 'quest' %}data-availability="{% url 'availability' %}"{% endif %}>
+    {% csrf_token %}{% include 'portal/fields.html' %}
+    {% if site.key == 'quest' %}<p class="hint" data-availability-note aria-live="polite">Выберите квест и введите дату, чтобы увидеть свободное время.</p>{% endif %}
+    <button class="button wide" type="submit">{{ site.submit }} <span aria-hidden="true">→</span></button>
+  </form>
+</section>
+<aside class="panel help-panel"><p class="eyebrow">ПЕРЕД ОТПРАВКОЙ</p><h2>{% if site.key == 'help' %}Что указать в обращении{% elif site.key == 'quest' %}Подготовьте команду{% else %}Планирование поездки{% endif %}</h2>
+  <ul>{% if site.key == 'help' %}
+    <li>Укажите текст ошибки и шаги, после которых она появляется.</li><li>Выберите, как специалисту удобнее с вами связаться.</li>
+    {% elif site.key == 'quest' %}<li>Свободное время зависит от выбранного квеста и даты.</li><li>Окончательный статус появится после проверки администратором.</li>
+    {% else %}<li>Выберите модель и день начала аренды.</li><li>Доступные способы оплаты — наличные или перевод по номеру телефона.</li>{% endif %}
+  </ul>
+</aside>
+</div>
+{% endblock %}
