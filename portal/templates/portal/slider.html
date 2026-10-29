@@ -1,0 +1,15 @@
+{% load static %}
+<section class="slider" data-slider aria-roledescription="карусель" aria-label="Фотографии {{ site.name }}">
+  <div class="slides">
+  {% for headline, description in site.slides %}
+    <div class="slide{% if forloop.first %} is-current{% endif %}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+      <img src="{% static 'media/slide-' %}{{ forloop.counter }}.webp" alt="{{ description }}" width="1200" height="680">
+      <div class="slide-caption"><span>ФОТО {{ forloop.counter|stringformat:"02d" }} / 04</span><strong>{{ headline }}</strong></div>
+    </div>
+  {% endfor %}
+  </div>
+  <div class="slider-controls">
+    <div class="dots" aria-label="Выбор слайда">{% for slide in site.slides %}<button type="button" data-dot="{{ forloop.counter0 }}" aria-label="Слайд {{ forloop.counter }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"></button>{% endfor %}</div>
+    <div class="arrows"><button type="button" data-pause aria-label="Приостановить слайды">Ⅱ</button><button type="button" data-step="-1" aria-label="Назад">←</button><button type="button" data-step="1" aria-label="Вперёд">→</button></div>
+  </div>
+</section>

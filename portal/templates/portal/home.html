@@ -7,7 +7,7 @@
     {% elif request.member %}<a class="button" href="{% url 'create' %}">{{ site.action }} <span aria-hidden="true">→</span></a>
     {% else %}<a class="button" href="{% url 'login' %}">{{ site.action }} <span aria-hidden="true">→</span></a><a class="hero-link" href="{% url 'register' %}">Создать аккаунт</a>{% endif %}
   </div>
-  
+  {% include 'portal/slider.html' %}
 </section>
 <section class="home-block">
   <p class="eyebrow">ВЫБЕРИТЕ, С ЧЕГО НАЧАТЬ</p>
