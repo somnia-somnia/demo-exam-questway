@@ -1,0 +1,114 @@
+{% extends 'portal/base.html' %}{% load static %}
+{% block title %}Модуль 4 · {{ site.name }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/prototype.css' %}">
+{% if site.key == 'quest' %}
+<section class="design-head">
+  <p class="eyebrow">МОДУЛЬ 4 / QUESTWAY</p><h1>UI-кит и макеты</h1>
+  <p class="lead">Шесть экранов портала в двух разрешениях. Палитра, типографика, сетка и варианты компонентов.</p>
+  <nav class="design-nav"><a href="#kit">Компоненты</a><a href="#frames">Фреймы</a><a href="#flow">Переходы</a></nav>
+</section>
+<section class="panel design-section" id="kit">
+  <div class="design-title"><p class="eyebrow">01 / DESIGN SYSTEM</p><h2>Токены и состояния</h2></div>
+  <div class="swatches">
+    <div style="--swatch:#f7f1ea"><span></span><strong>Фон</strong><code>#F7F1EA</code></div>
+    <div style="--swatch:#fffaf4"><span></span><strong>Поверхность</strong><code>#FFFAF4</code></div>
+    <div style="--swatch:#291b29"><span></span><strong>Текст</strong><code>#291B29</code></div>
+    <div style="--swatch:#75406b"><span></span><strong>Акцент</strong><code>#75406B</code></div>
+    <div style="--swatch:#dff5e9"><span></span><strong>Успех</strong><code>#DFF5E9</code></div>
+    <div style="--swatch:#ffeaee"><span></span><strong>Ошибка</strong><code>#FFEAEE</code></div>
+  </div>
+  <div class="type-spec"><h2>Заголовок Inter 760</h2><p>Основной текст Inter 16</p><p class="eyebrow">ПОДПИСЬ INTER 11</p><span aria-label="Иконки">←　→　✓　×　＋　☰</span></div>
+  <div class="design-grids"><div><strong>1440 × 1024 · 12 колонок · шаг 8 px</strong><div class="mini-grid cols-12"></div></div><div><strong>390 × 844 · 4 колонки · шаг 8 px</strong><div class="mini-grid cols-4"></div></div></div>
+  <div class="variants">
+  {% for key, label in prototype_states %}
+    <section class="state-demo state-{{ key }}">
+      <h3>{{ label }}</h3>
+      <button class="button compact" type="button" {% if key == 'disabled' %}disabled{% endif %}>Забронировать</button>
+      <div class="field"><label for="kit-input-{{ key }}">Дата</label><input id="kit-input-{{ key }}" value="12.11.2026" {% if key == 'disabled' %}disabled{% endif %} {% if key == 'error' %}aria-invalid="true" aria-describedby="kit-error"{% endif %}>{% if key == 'error' %}<p id="kit-error" class="field-error">Проверьте дату</p>{% endif %}</div>
+      <div class="field"><label for="kit-select-{{ key }}">Вариация</label><select id="kit-select-{{ key }}" {% if key == 'disabled' %}disabled{% endif %} {% if key == 'error' %}aria-invalid="true"{% endif %}><option>Стандартный</option><option>С актерами</option><option>Ночной режим</option></select></div>
+      <article class="panel demo-quest"><strong>Тайна бункера</strong><small>Карточка квеста</small></article>
+      <span class="badge status-{% if key == 'error' %}cancelled{% else %}confirmed{% endif %}">{% if key == 'error' %}Отменено{% else %}Подтверждено{% endif %}</span>
+      <div class="demo-toast">{% if key == 'error' %}× Проверьте данные{% else %}✓ Данные сохранены{% endif %}</div>
+    </section>
+  {% endfor %}
+  </div>
+</section>
+<section class="panel design-section" id="frames">
+  <div class="design-title"><p class="eyebrow">02 / ЭКРАНЫ</p><h2>Настольная и мобильная версии</h2><p class="muted">Откройте изображение, чтобы увидеть кадр в исходном размере.</p></div>
+  <div class="frame-gallery">
+  {% for key, label in prototype_pages %}
+    <article class="frame-card"><h3>{{ label }}</h3><div class="frame-pair">
+      <a href="{% static 'prototype/' %}{{ key }}-desktop.png"><img loading="lazy" src="{% static 'prototype/' %}{{ key }}-desktop.png" width="1440" height="1024" alt="{{ label }}, настольная версия"><small>1440 × 1024</small></a>
+      <a href="{% static 'prototype/' %}{{ key }}-mobile.png"><img loading="lazy" src="{% static 'prototype/' %}{{ key }}-mobile.png" width="390" height="844" alt="{{ label }}, мобильная версия"><small>390 × 844</small></a>
+    </div></article>
+  {% endfor %}
+  </div>
+</section>
+<section class="panel design-section" id="flow">
+  <div class="design-title"><p class="eyebrow">03 / ПРОТОТИП</p><h2>Переходы между экранами</h2><p class="muted">Перейдите к форме или проверьте слайдер на главной. Бронирование и смена статуса доступны после входа с соответствующей ролью.</p></div>
+  <nav class="design-nav"><a href="{% url 'home' %}">Главная →</a><a href="{% url 'register' %}">Регистрация →</a><a href="{% url 'login' %}">Авторизация →</a><a href="{% url 'create' %}">Оформление →</a><a href="{% url 'requests' %}">Бронирования →</a><a href="{% url 'admin_panel' %}">Администрирование →</a></nav>
+</section>
+{% elif site.key == 'help' %}
+<section class="design-head"><p class="eyebrow">МОДУЛЬ 4 / ПРОМЫШЛЕННАЯ АВТОМАТИКА</p><h1>РобоТех Автоматика</h1><p class="lead">Главная и каталог. Настольные экраны на 12-колоночной сетке.</p></section>
+<div class="proto-board robo-board">
+  <article class="proto-frame robo" id="robo-main">
+    <p class="frame-label">01 / ГЛАВНАЯ · 12 КОЛОНОК</p>
+    <div class="robo-nav"><strong><i>RT</i> РОБОТЕХ</strong><nav><a aria-current="page" href="#robo-main">Главная</a><a href="#robo-catalog">Каталог роботов</a></nav></div>
+    <section class="robo-main">
+      <label class="proto-search">Поиск по решениям <input type="search" placeholder="Название робота или комплекса"></label>
+      <p class="proto-tag">РОБОТИЗИРОВАННЫЙ КОМПЛЕКС</p><h2>РобоТех<br>Склад Про</h2>
+      <p>Интеллектуальная система автономных мобильных роботов (AMR) и промышленных манипуляторов для комплексной автоматизации складов, цехов и РЦ. Доступны модификации для сортировки, паллетирования, перемещения грузов и инвентаризации.</p>
+      <ul><li>Более 500 автоматизированных складов и цехов</li><li>Повышение скорости сборки и отгрузки до 300%</li><li>Интеграция с отечественными WMS</li></ul>
+      <div class="proto-actions"><button type="button">Рассчитать проект</button><button type="button">Запросить демо-тур</button></div>
+    </section>
+    <footer class="proto-foot">Условия использования · Политика конфиденциальности<br>© 2026 Все права защищены</footer>
+  </article>
+  <article class="proto-frame robo" id="robo-catalog">
+    <p class="frame-label">02 / КАТАЛОГ · 12 КОЛОНОК</p>
+    <div class="robo-nav"><strong><i>RT</i> РОБОТЕХ</strong><nav><a href="#robo-main">Главная</a><a aria-current="page" href="#robo-catalog">Каталог роботов</a></nav></div>
+    <section class="robo-main robo-list">
+      <p class="proto-tag">СЕРИЯ / 01—04</p><h2>Каталог роботов</h2>
+      <div class="robo-cards">
+        <article><small>01 / AMR</small><h3>РобоТех Портер</h3><p>Грузоподъёмность до 1500 кг. SLAM-навигация без разметки пола. Автоподзарядка.</p><button type="button">Подробнее</button></article>
+        <article><small>02 / MANIPULATOR</small><h3>РобоТех Манипулятор М6</h3><p>6 степеней свободы, IP67, интеграция с техзрением, точность до 0,02 мм.</p><button type="button">Подробнее</button></article>
+        <article><small>03 / SORTER</small><h3>РобоТех Сортер</h3><p>До 10 000 посылок в час, модульный конвейер, считывание штрихкодов и RFID.</p><button type="button">Подробнее</button></article>
+        <article><small>04 / INSPECTOR</small><h3>РобоТех Инспектор</h3><p>Мобильный аудит складских запасов и 3D-картографирование.</p><button type="button">Подробнее</button></article>
+      </div>
+    </section>
+    <footer class="proto-foot">Условия использования · Политика конфиденциальности<br>© 2026 Все права защищены</footer>
+  </article>
+</div>
+{% else %}
+<section class="design-head"><p class="eyebrow">МОДУЛЬ 4 / ПЛАТФОРМА ДАННЫХ</p><h1>Группа Таймыр</h1><p class="lead">Два мобильных экрана · 430 × 932 px · 4-колоночная сетка.</p></section>
+<div class="proto-board taimyr-board">
+  <article class="proto-frame taimyr" id="t-main"><p class="frame-label">01 / ГЛАВНАЯ · 430 × 932</p>
+    <div class="phone-frame">
+      <header class="t-nav"><img src="{% static 'media/prototype-logo.webp' %}" alt="Таймыр"><nav><a href="#t-main" aria-current="page">Главная</a><a href="#t-solutions">Решения</a></nav></header>
+      <div class="t-main"><label class="proto-search">Поиск <input type="search" placeholder="Поиск по продуктам"></label>
+        <p class="proto-tag">ПЛАТФОРМА ДАННЫХ</p><h2>Таймыр Data Platform Enterprise</h2>
+        <img class="t-photo" src="{% static 'media/prototype-server.webp' %}" alt="Серверные стойки центра обработки данных">
+        <p>Отечественная платформа со встроенными средствами защиты для надежного хранения, обработки и резервного копирования корпоративных данных в ИТ-инфраструктурах любого масштаба. Доступны версии для серверного, десктопного, мобильного и встраиваемого сценариев применения.</p>
+        <ul><li>Более 800 организаций используют Таймыр Data Platform</li><li>Непрерывная защита данных от сбоев и утечек на всех этапах хранения</li><li>Полная совместимость с отечественными ОС и стандартами</li></ul>
+        <div class="proto-actions"><button type="button">Заказать лицензию</button><button type="button">Скачать пробную версию</button></div>
+      </div><footer class="proto-foot">Продолжая, вы соглашаетесь с условиями использования и политикой конфиденциальности<br>© 2025 Все права защищены</footer>
+    </div>
+  </article>
+  <article class="proto-frame taimyr" id="t-solutions"><p class="frame-label">02 / РЕШЕНИЯ · 430 × 932</p>
+    <div class="phone-frame">
+      <header class="t-nav"><img src="{% static 'media/prototype-logo.webp' %}" alt="Таймыр"><nav><a href="#t-main">Главная</a><a href="#t-solutions" aria-current="page">Решения</a></nav></header>
+      <div class="t-main"><p class="proto-tag">ЭКОСИСТЕМА</p><h2>Решения</h2>
+        <div class="t-cards">
+          <article><h3>Таймыр Studio</h3><ul><li>Удобство для администратора</li><li>Универсальность</li><li>Современность</li><li>Наглядность</li></ul><button type="button">Подробнее</button></article>
+          <article><h3>Таймыр Server</h3><ul><li>Отказоустойчивый кластер баз данных</li><li>Централизованное управление конфигурациями</li><li>Инструменты для разработки и использования прикладного ПО</li><li>Безопасная среда исполнения контейнерных нагрузок</li></ul><button type="button">Подробнее</button></article>
+          <article><h3>Таймыр Mobile</h3><ul><li>Адаптивность</li><li>Централизованность</li><li>Удобство</li></ul><button type="button">Подробнее</button></article>
+          <article><h3>Таймыр Embedded</h3><ul><li>Поддержка основных процессорных архитектур</li><li>Гибкая система лицензирования</li><li>Сертификаты ключевых регуляторов</li><li>Техническая поддержка вендора ОС</li></ul><button type="button">Подробнее</button></article>
+          <article><h3>Программный стек «Группы Таймыр»</h3><p>Экосистема продуктов «Группы Таймыр»</p><button type="button">Подробнее</button></article>
+          <article><h3>Техническая поддержка</h3><p>Консультация 24/7</p><button type="button">Подробнее</button></article>
+        </div>
+      </div><footer class="proto-foot">© 2025 Все права защищены</footer>
+    </div>
+  </article>
+</div>
+{% endif %}
+{% endblock %}

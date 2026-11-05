@@ -1,0 +1,93 @@
+html{scroll-behavior:smooth}
+.design-head{padding:12px 0 22px}
+.design-head h1{margin:.25em 0 .18em}
+.design-nav{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.design-nav a{background:var(--soft);padding:8px 12px;border-radius:8px;text-decoration:none;font-size:.83rem}
+.design-section{margin-bottom:14px;padding:clamp(14px,2vw,27px)}
+.design-title{margin-bottom:14px}
+.design-title h2{margin:.2em 0}
+.swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.swatches div{display:grid;gap:3px;border:1px solid var(--line);border-radius:9px;overflow:hidden;font-size:.8rem}
+.swatches div span{height:35px;background:var(--swatch)}
+.swatches div :is(strong,code){padding-inline:5px;overflow-wrap:anywhere}
+.type-spec,.design-grids{display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding-block:11px;border-bottom:1px solid var(--line)}
+.design-grids{display:grid;grid-template-columns:1fr 1fr;font-size:.82rem}
+.mini-grid{height:20px;margin-top:5px;background:repeating-linear-gradient(90deg,var(--soft) 0,var(--soft) calc(100% / var(--columns) - 3px),transparent calc(100% / var(--columns) - 3px),transparent calc(100% / var(--columns)))}
+.cols-12{--columns:12}.cols-4{--columns:4}
+.variants{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.state-demo{border:1px solid var(--line);border-radius:12px;padding:9px;display:grid;align-content:start;gap:7px}
+.state-demo h3{font-size:.97rem}.state-demo .badge{justify-self:start}
+.state-hover .button{background:var(--accent-hover);transform:translateY(-1px)}
+.state-hover :is(input,select,.demo-quest){border-color:var(--accent)}
+.state-pressed .button{background:var(--accent-hover);transform:translateY(2px)}
+.state-pressed :is(input,select){border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+.state-disabled :is(input,select,.demo-quest,.badge,.demo-toast){opacity:.48}
+.state-error :is(.demo-quest,.demo-toast){border-color:#bc3647}
+.demo-quest,.demo-toast{padding:6px;border:1px solid var(--line);border-radius:8px;font-size:.75rem}
+.demo-quest small{display:block;color:var(--muted)}
+.demo-toast{background:#dff5e9;color:#1a6344}
+.state-error .demo-toast{background:#ffeaee;color:#912e42}
+.frame-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.frame-card{background:var(--input);border:1px solid var(--line);border-radius:10px;padding:8px}
+.frame-card h3{margin-bottom:7px;font-size:.95rem}
+.frame-pair{display:grid;grid-template-columns:2fr .66fr;align-items:start;gap:5px}
+.frame-pair img{width:100%;height:auto;border:1px solid var(--line);display:block}
+.frame-pair small{font-size:.65rem}
+.proto-board{display:grid;gap:12px;align-items:start}
+.robo-board{grid-template-columns:repeat(2,minmax(0,1fr))}
+.taimyr-board{grid-template-columns:repeat(2,minmax(0,430px));justify-content:center;gap:22px}
+.proto-frame{min-width:0;overflow:hidden;border-radius:13px;border:1px solid var(--line);scroll-margin:12px}
+.proto-frame:target{outline:3px solid var(--focus);outline-offset:3px}
+.frame-label{padding:8px 12px;background:#e5ebf0;font-size:.73rem;font-weight:800;color:#283743;letter-spacing:.08em}
+.robo{background:#16232a;color:#eef7f4}
+.robo-nav,.t-nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;padding:12px 17px;border-bottom:1px solid #ffffff30}
+.robo-nav strong{letter-spacing:.06em}
+.robo-nav i{background:#78e1b6;color:#132622;padding:4px;border-radius:4px;font-style:normal}
+.robo-nav a,.t-nav a{display:inline-flex;align-items:center;min-height:40px;padding:0 5px;color:inherit;font-size:.88rem}
+.robo-nav a:hover,.robo-nav a[aria-current=page]{color:#78e1b6}
+.robo-main,.t-main{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px;padding:17px}
+.robo-main>*,.t-main>*{grid-column:1/-1}
+.robo-main>p,.robo-main>ul{max-width:63ch;color:#e1f1eb}
+.robo-main h2{font-size:clamp(1.8rem,4vw,3.6rem);color:#fff}
+.proto-search{display:grid;gap:2px;font-size:.83rem;font-weight:700}
+.proto-search input{min-height:40px;border-radius:7px;border:1px solid #788f8b;background:#f8fffc;color:#132622;padding:6px;width:100%}
+.proto-tag{font-size:.76rem;font-weight:800;letter-spacing:.1em}
+.robo-main .proto-tag,.robo-cards small{color:#78e1b6}
+.robo-main ul,.t-main ul{padding-left:20px;margin:.2rem 0}
+.proto-actions{display:flex;gap:6px;flex-wrap:wrap}
+.proto-frame button{min-height:40px;border-radius:7px;padding:6px 9px;font-weight:730;font-size:.86rem}
+.robo button{background:#78e1b6;color:#132622;border:1px solid #78e1b6}
+.robo button+button{background:transparent;color:#a2ebca}
+.robo button:hover{background:#b2f4d8;color:#132622}
+.robo-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.robo-cards article,.t-cards article{display:grid;gap:5px;align-content:start;padding:10px;border-radius:9px}
+.robo-cards article{border:1px solid #466059;background:#20333a}
+.robo-cards article p,.t-cards article p,.t-cards article ul{font-size:.89rem}
+.robo-cards button,.t-cards button{justify-self:start}
+.proto-foot{border-top:1px solid #ffffff30;padding:12px 17px;font-size:.82rem;line-height:1.4}
+.taimyr{font-family:Roboto,Arial,sans-serif;background:white;border-radius:10px;color:#172e34;font-size:15px}
+.phone-frame{height:932px;overflow:auto;scrollbar-width:thin;background:#f8fbfc}
+.t-nav{background:white;border-color:#d5e6e8;padding:10px 14px}
+.t-nav img{width:117px;max-width:100%}
+.t-nav a{color:#154451}
+.t-nav a:hover,.t-nav a[aria-current=page]{color:#087388}
+.t-main{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px}
+.t-main h2{font-size:2.05rem;color:#0e3f48}
+.t-main .proto-tag{color:#0a6576}
+.t-photo{width:100%;height:145px;object-fit:cover;border-radius:8px}
+.taimyr button{background:#0a6373;color:white;border:1px solid #0a6373}
+.taimyr button+button{background:white;color:#0a6373}
+.taimyr button:hover{background:#144c58;color:white}
+.t-cards{display:grid;gap:7px}
+.t-cards article{border:1px solid #d0e5e8;background:white}
+.t-cards h3{font-size:1.13rem;color:#0e3f48}
+.taimyr .proto-foot{border-color:#d0e5e8}
+@media(max-width:850px){
+  .variants{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .frame-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .robo-board,.taimyr-board,.frame-gallery{grid-template-columns:minmax(0,1fr)}
+  .variants{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .swatches{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
