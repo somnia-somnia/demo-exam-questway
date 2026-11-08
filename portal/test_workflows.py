@@ -38,6 +38,10 @@ class Workflows(TestCase):
         bad = self.client.post(reverse('register'), {**good, 'full_name': 'Alice', 'phone': '123'})
         self.assertFormError(bad.context['form'], 'full_name', 'Используйте кириллицу и пробелы.')
         self.assertFalse(Member.objects.filter(login='alex2026').exists())
+        long_email = 'a'*62 + '@' + '.'.join(['b'*60, 'c'*60, 'd'*60, 'example.com'])
+        too_long = self.client.post(reverse('register'), {**good, 'email':long_email})
+        self.assertEqual(too_long.status_code, 200)
+        self.assertIn('email', too_long.context['form'].errors)
         self.assertRedirects(self.client.post(reverse('register'), good), reverse('login'))
         self.assertNotEqual(Member.objects.get(login='alex2026').password, good['password'])
         repeat = self.client.post(reverse('register'), {**good, 'login': 'ALEX2026'})
@@ -106,6 +110,8 @@ class Workflows(TestCase):
         if SITE.key != 'quest':
             return
         from portal.models import Quest, Variation
+        self.assertEqual(Quest.objects.filter(active=True).count(), 3)
+        self.assertGreaterEqual(Quest.objects.count(), 6)
         self.assertEqual(self.client.get(reverse('catalog')).status_code, 302)
         self.admin()
         self.assertEqual(self.client.post(reverse('catalog'), {'kind':'quest','name':'Дверь в подземелье','summary':'Новый маршрут'}).status_code, 302)
@@ -118,3 +124,22 @@ class Workflows(TestCase):
         self.assertEqual(self.client.post(reverse('catalog'), {'kind':'quest','id':item.pk,'action':'archive'}).status_code, 302)
         item.refresh_from_db()
         self.assertFalse(item.active)
+
+    def test_demo_refresh_preserves_catalog_edits(self):
+        if SITE.key != 'quest':
+            return
+        from portal.models import Quest, Variation
+        item = Quest.objects.get(pk=1)
+        mode = Variation.objects.filter(quest=item).first()
+        self.admin()
+        self.assertEqual(self.client.post(reverse('catalog'), {
+            'kind':'quest','id':item.pk,'name':'Полярный бункер','summary':item.summary,
+        }).status_code, 302)
+        self.assertEqual(self.client.post(reverse('catalog'), {
+            'kind':'variation','id':mode.pk,'name':'Дневная смена',
+        }).status_code, 302)
+        populate()
+        self.assertEqual(Quest.objects.filter(active=True).count(), 3)
+        self.assertEqual(Variation.objects.filter(quest=item).count(), 3)
+        self.assertEqual(Quest.objects.get(pk=item.pk).name,'Полярный бункер')
+        self.assertEqual(Variation.objects.get(pk=mode.pk).name,'Дневная смена')

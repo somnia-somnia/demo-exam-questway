@@ -1,0 +1,15 @@
+{
+  "name": "QuestWay · макет и прототип",
+  "id": "1561467470084417024",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma"
+  ],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ]
+  }
+}

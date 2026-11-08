@@ -26,7 +26,7 @@ class RegistrationForm(StyledForm, forms.Form):
         label='Телефон', max_length=16,
         error_messages={'invalid':'Введите номер в формате 8(900)123-45-67.'},
         widget=forms.TextInput(attrs={'placeholder':'8(900)123-45-67','type':'tel','inputmode':'tel','autocomplete':'tel-national','pattern':r'8\([0-9]{3}\) ?[0-9]{3}-[0-9]{2}-[0-9]{2}','data-phone':'','data-invalid':'Введите номер в формате 8(900)123-45-67.'}))
-    email = forms.EmailField(label='Электронная почта',
+    email = forms.EmailField(label='Электронная почта', max_length=Member._meta.get_field('email').max_length,
         widget=forms.EmailInput(attrs={'placeholder':'mail@example.ru','autocomplete':'email','data-invalid':'Введите корректный email.'}))
 
     def clean_login(self):
